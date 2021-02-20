@@ -13,6 +13,7 @@ import br.com.nailson.cursomc.domain.Cidade;
 import br.com.nailson.cursomc.domain.Cliente;
 import br.com.nailson.cursomc.domain.Endereco;
 import br.com.nailson.cursomc.domain.Estado;
+import br.com.nailson.cursomc.domain.ItemPedido;
 import br.com.nailson.cursomc.domain.Pagamento;
 import br.com.nailson.cursomc.domain.PagamentoComBoleto;
 import br.com.nailson.cursomc.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import br.com.nailson.cursomc.repositories.CidadeRepository;
 import br.com.nailson.cursomc.repositories.ClienteRepository;
 import br.com.nailson.cursomc.repositories.EnderecoRepository;
 import br.com.nailson.cursomc.repositories.EstadoRepository;
+import br.com.nailson.cursomc.repositories.ItemPedidoRepository;
 import br.com.nailson.cursomc.repositories.PagamentoRepository;
 import br.com.nailson.cursomc.repositories.PedidoRepository;
 import br.com.nailson.cursomc.repositories.ProdutoRepository;
@@ -47,6 +49,8 @@ public class CursomcApplication implements CommandLineRunner{
 	private PedidoRepository pedRepo;
 	@Autowired
 	private PagamentoRepository pagRepo;
+	@Autowired
+	private ItemPedidoRepository ipRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -111,6 +115,19 @@ public class CursomcApplication implements CommandLineRunner{
 		pedRepo.saveAll(Arrays.asList(ped1, ped2));
 		pagRepo.saveAll(Arrays.asList(pag1, pag2));
 		
+		
+		ItemPedido it1 = new ItemPedido(ped1, p1, 0.0,1,2000.0);		
+		ItemPedido it2 = new ItemPedido(ped1, p3, 0.0,2,80.0);
+		ItemPedido it3 = new ItemPedido(ped2, p2, 100.0,1,800.0);
+		
+		ped1.getItens().addAll(Arrays.asList(it1,it2));
+		ped2.getItens().addAll(Arrays.asList(it3));
+		
+		p1.getItens().addAll(Arrays.asList(it1));
+		p2.getItens().addAll(Arrays.asList(it3));
+		p3.getItens().addAll(Arrays.asList(it2));
+		
+		ipRepo.saveAll(Arrays.asList(it1,it2,it3));
 	}
 
 }
