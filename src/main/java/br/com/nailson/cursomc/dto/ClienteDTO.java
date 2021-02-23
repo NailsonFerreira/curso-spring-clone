@@ -8,7 +8,8 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import br.com.nailson.cursomc.domain.Cliente;
-
+import br.com.nailson.cursomc.services.validation.ClienteUpdate;
+@ClienteUpdate
 public class ClienteDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -18,7 +19,7 @@ public class ClienteDTO implements Serializable{
 	private String nome;
 	
 	@NotEmpty(message = "Preenchimento obrigatoório")
-	@Email
+	@Email(message = "Formato de email inválido")
 	private String email;
 	
 	public ClienteDTO() {
