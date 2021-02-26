@@ -11,6 +11,7 @@ import br.com.nailson.cursomc.domain.ItemPedido;
 import br.com.nailson.cursomc.domain.PagamentoComBoleto;
 import br.com.nailson.cursomc.domain.Pedido;
 import br.com.nailson.cursomc.domain.enums.EstadoPagamento;
+import br.com.nailson.cursomc.repositories.ClienteRepository;
 import br.com.nailson.cursomc.repositories.ItemPedidoRepository;
 import br.com.nailson.cursomc.repositories.PagamentoRepository;
 import br.com.nailson.cursomc.repositories.PedidoRepository;
@@ -35,6 +36,9 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoRepository itemRepo;
 	
+	@Autowired
+	private ClienteService cliService;
+	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -44,6 +48,7 @@ public class PedidoService {
 	@Transactional
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
+		obj.setCliente(cliService.find(obj.getCliente().getId()));
 		obj.setInstante(new Date());
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
@@ -56,12 +61,13 @@ public class PedidoService {
 		
 		for(ItemPedido i : obj.getItens()) {
 			i.setDesconto(0.0);
-			i.setPreco(prodService.find(i.getProduto().getId()).getPreco());
+			i.setProduto(prodService.find(i.getProduto().getId()));
+			i.setPreco(i.getProduto().getPreco());
 			i.setPedido(obj);
 		}
 		
 		itemRepo.saveAll(obj.getItens());
-		
+		System.out.println(obj);
 		return obj;
 	}
 }
