@@ -11,7 +11,6 @@ import br.com.nailson.cursomc.domain.ItemPedido;
 import br.com.nailson.cursomc.domain.PagamentoComBoleto;
 import br.com.nailson.cursomc.domain.Pedido;
 import br.com.nailson.cursomc.domain.enums.EstadoPagamento;
-import br.com.nailson.cursomc.repositories.ClienteRepository;
 import br.com.nailson.cursomc.repositories.ItemPedidoRepository;
 import br.com.nailson.cursomc.repositories.PagamentoRepository;
 import br.com.nailson.cursomc.repositories.PedidoRepository;
@@ -38,6 +37,9 @@ public class PedidoService {
 	
 	@Autowired
 	private ClienteService cliService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -68,6 +70,7 @@ public class PedidoService {
 		
 		itemRepo.saveAll(obj.getItens());
 		System.out.println(obj);
+		emailService.sendOrderConfimationEmail(obj);
 		return obj;
 	}
 }
