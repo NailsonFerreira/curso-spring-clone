@@ -1,8 +1,18 @@
 package br.com.nailson.cursomc.services;
 
 
+import java.util.Calendar;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import br.com.nailson.cursomc.domain.Pedido;
 
@@ -10,6 +20,12 @@ public abstract class AbstractEmailService implements EmailService{
 	
 	@Value("${default.sender}")
 	private String senderEmail;
+	
+	@Autowired
+	private TemplateEngine tempEngine;
+	
+	@Autowired
+	private JavaMailSender javaMail;
 
 	@Override
 	public void sendOrderConfimationEmail(Pedido pedido) {
@@ -26,4 +42,35 @@ public abstract class AbstractEmailService implements EmailService{
 		sm.setText(pedido.toString());
 		return sm;
 	}
+	
+	protected String htmlFromTemplatePedido(Pedido obj) {
+		Context context = new Context(); 
+		context.setVariable("pedido", obj);
+		return tempEngine.process("email/confirmacaoPedido", context);
+	}
+	
+	@Override
+	public void sendOrderConfirmationHtmlEmail(Pedido obj) {
+		MimeMessage mm;
+		try {
+			mm = prepareMimeMessageFromPedido(obj);
+			sendHtmlEmail(mm);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			sendOrderConfimationEmail(obj);
+		}
+		
+	}
+
+	protected MimeMessage prepareMimeMessageFromPedido(Pedido obj) throws MessagingException {
+		MimeMessage mime = javaMail.createMimeMessage();
+		MimeMessageHelper mimeHelper = new MimeMessageHelper(mime, true);
+		mimeHelper.setTo(obj.getCliente().getEmail());
+		mimeHelper.setFrom(senderEmail);
+		mimeHelper.setSubject("Pedido confirmado! Cod.:" + obj.getId());
+		mimeHelper.setSentDate(Calendar.getInstance().getTime());
+		mimeHelper.setText(htmlFromTemplatePedido(obj), true);
+		
+		return mime;
+	};
 }
