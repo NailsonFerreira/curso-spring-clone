@@ -117,7 +117,7 @@ public class DBService {
 		estRepo.saveAll(Arrays.asList(e1, e2));
 		cidRepo.saveAll(Arrays.asList(ci1, ci2, ci3));
 		
-		Cliente cli1 = new Cliente(null, "Maria", "maria@email.com", "000.000.000-11",TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "Maria", "nailson_ferreira@hotmail.com", "000.000.000-11",TipoCliente.PESSOAFISICA);
 		cli1.getTelefones().addAll(Arrays.asList("1234-5678", "0000-0000"));
 		
 		Endereco en1 = new Endereco(null, "Rua das Flores", "300", "Apto. 23", "Hamptons","55565-000", cli1, ci1);

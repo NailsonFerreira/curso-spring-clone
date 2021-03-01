@@ -6,7 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 
 import br.com.nailson.cursomc.domain.Pedido;
 
-public abstract class AbstractEmailMessage implements EmailService{
+public abstract class AbstractEmailService implements EmailService{
 	
 	@Value("${default.sender}")
 	private String senderEmail;
