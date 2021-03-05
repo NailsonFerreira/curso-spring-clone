@@ -20,6 +20,7 @@ import br.com.nailson.cursomc.domain.PagamentoComCartao;
 import br.com.nailson.cursomc.domain.Pedido;
 import br.com.nailson.cursomc.domain.Produto;
 import br.com.nailson.cursomc.domain.enums.EstadoPagamento;
+import br.com.nailson.cursomc.domain.enums.Perfil;
 import br.com.nailson.cursomc.domain.enums.TipoCliente;
 import br.com.nailson.cursomc.repositories.CategoriaRepository;
 import br.com.nailson.cursomc.repositories.CidadeRepository;
@@ -121,8 +122,9 @@ public class DBService {
 		estRepo.saveAll(Arrays.asList(e1, e2));
 		cidRepo.saveAll(Arrays.asList(ci1, ci2, ci3));
 		
-		Cliente cli1 = new Cliente(null, "Maria", "nah@hotmail.com", "125.375.330-03",TipoCliente.PESSOAFISICA, passEncoder.encode("2110"));
-		Cliente cli2 = new Cliente(null, "Nay", "nailson_ferreira@hotmail.com", "854.101.460-69",TipoCliente.PESSOAFISICA, passEncoder.encode("2110"));
+		Cliente cli1 = new Cliente(null, "Maria", "nah@hotmail.com", "125.375.330-03",TipoCliente.PESSOAFISICA, passEncoder.encode("0000"));
+		Cliente cli2 = new Cliente(null, "Nay", "nailson_ferreira@hotmail.com", "854.101.460-69",TipoCliente.PESSOAFISICA, passEncoder.encode("0000"));
+		cli2.addPerfil(Perfil.ADMIN);
 		cli1.getTelefones().addAll(Arrays.asList("1234-5678", "0000-0000"));
 		cli2.getTelefones().addAll(Arrays.asList("0000-1111", "0000-2222"));
 		

@@ -1,6 +1,6 @@
 package br.com.nailson.cursomc.domain.enums;
 
-public enum PerfilEnum {
+public enum Perfil {
 
 	ADMIN(1, "ROLE_ADMIN"),
 	CLIENTE(2, "ROLE_CLIENTE");
@@ -8,7 +8,7 @@ public enum PerfilEnum {
 	private int cod;
 	private String descricao;
 	
-	private PerfilEnum(int cod, String descricao) {
+	private Perfil(int cod, String descricao) {
 		this.cod = cod;
 		this.descricao = descricao;
 	}
@@ -21,11 +21,11 @@ public enum PerfilEnum {
 		return descricao;
 	}
 	
-	public static PerfilEnum toEnum(Integer cod) {
+	public static Perfil toEnum(Integer cod) {
 		if(cod==null)
 			return null;
 		
-		for(PerfilEnum x: PerfilEnum.values()) {
+		for(Perfil x: Perfil.values()) {
 			if(cod.equals(x.cod))
 				return x;
 		}

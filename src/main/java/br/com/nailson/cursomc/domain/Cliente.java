@@ -20,7 +20,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.nailson.cursomc.domain.enums.PerfilEnum;
+import br.com.nailson.cursomc.domain.enums.Perfil;
 import br.com.nailson.cursomc.domain.enums.TipoCliente;
 @Entity
 public class Cliente implements Serializable{
@@ -52,7 +52,7 @@ public class Cliente implements Serializable{
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 	public Cliente() {
-		addPerfil(PerfilEnum.CLIENTE);
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
@@ -63,7 +63,7 @@ public class Cliente implements Serializable{
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo==null)? null:tipo.getCod();
 		this.senha = senha;
-		addPerfil(PerfilEnum.CLIENTE);
+		addPerfil(Perfil.CLIENTE);
 	}
 
 	public Integer getId() {
@@ -139,11 +139,11 @@ public class Cliente implements Serializable{
 		this.senha = senha;
 	}
 	
-	public Set<PerfilEnum> getPerfis(){
-		return perfis.stream().map(x-> PerfilEnum.toEnum(x)).collect(Collectors.toSet());
+	public Set<Perfil> getPerfis(){
+		return perfis.stream().map(x-> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
 
-	public void addPerfil(PerfilEnum perfil) {
+	public void addPerfil(Perfil perfil) {
 		perfis.add(perfil.getCod());
 	}
 	

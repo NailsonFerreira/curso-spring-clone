@@ -13,7 +13,4 @@ public class DataIntegrityException extends RuntimeException{
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-
 }
