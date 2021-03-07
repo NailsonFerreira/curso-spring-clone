@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.nailson.cursomc.services.exception.AuthorizationException;
 import br.com.nailson.cursomc.services.exception.DataIntegrityException;
 import br.com.nailson.cursomc.services.exception.ObjectNotFoundException;
 
@@ -36,11 +37,19 @@ public class ResourcesExceptionHandler {
 
 		ValidationError error = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação",
 				System.currentTimeMillis());
-		
-		for(FieldError x:e.getBindingResult().getFieldErrors()) {
+
+		for (FieldError x : e.getBindingResult().getFieldErrors()) {
 			error.addError(x.getField(), x.getDefaultMessage());
 		}
-		
+
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
+		System.out.println("ERRO: " + this.getClass().getName());
+		StandardError error = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage() + "55555555",
+				System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 	}
 }

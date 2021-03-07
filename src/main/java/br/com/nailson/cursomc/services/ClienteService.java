@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.nailson.cursomc.domain.Cidade;
 import br.com.nailson.cursomc.domain.Cliente;
 import br.com.nailson.cursomc.domain.Endereco;
+import br.com.nailson.cursomc.domain.enums.Perfil;
 import br.com.nailson.cursomc.domain.enums.TipoCliente;
 import br.com.nailson.cursomc.dto.ClienteDTO;
 import br.com.nailson.cursomc.dto.ClienteNewDTO;
 import br.com.nailson.cursomc.repositories.ClienteRepository;
 import br.com.nailson.cursomc.repositories.EnderecoRepository;
+import br.com.nailson.cursomc.security.UserSS;
+import br.com.nailson.cursomc.services.exception.AuthorizationException;
 import br.com.nailson.cursomc.services.exception.DataIntegrityException;
 import br.com.nailson.cursomc.services.exception.ObjectNotFoundException;
 
@@ -36,6 +39,12 @@ public class ClienteService {
 	private BCryptPasswordEncoder passEncoder;
 	
 	public Cliente find(Integer id) {
+		UserSS user = UserService.authenticated();
+		System.out.println("ERROTTTTTT: " + this.getClass().getName()+"\nUSER: "+ user);
+		if(user==null||!user.hasRole(Perfil.ADMIN)&&!id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				 "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
@@ -76,7 +85,7 @@ public class ClienteService {
 	
 	public Cliente fromDTO(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
-	}
+	} 
 	
 	public Cliente fromDTO(ClienteNewDTO objDto) {
 		Cliente cli =  new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()),passEncoder.encode(objDto.getSenha()));
