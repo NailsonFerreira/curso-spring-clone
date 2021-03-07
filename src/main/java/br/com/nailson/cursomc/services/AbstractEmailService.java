@@ -2,6 +2,7 @@ package br.com.nailson.cursomc.services;
 
 
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -14,6 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import br.com.nailson.cursomc.domain.Cliente;
 import br.com.nailson.cursomc.domain.Pedido;
 
 public abstract class AbstractEmailService implements EmailService{
@@ -73,4 +75,21 @@ public abstract class AbstractEmailService implements EmailService{
 		
 		return mime;
 	};
+	
+	@Override
+	public void sendNewPassword(Cliente cli, String newPass) {
+		SimpleMailMessage sm = prepareNewPasswordEmail(cli, newPass);
+		sendEmail(sm);
+		
+	}
+
+	protected SimpleMailMessage prepareNewPasswordEmail(Cliente cli, String newPass) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(cli.getEmail());
+		sm.setFrom(senderEmail);
+		sm.setSubject("Solicitação de nova senha");
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("Nova senha gerada: "+newPass);
+		return sm;
+	}
 }
